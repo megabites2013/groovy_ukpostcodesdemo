@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="https://www.wcc-group.com/sites/all/themes/wcc/favicon.ico" type="image/vnd.microsoft.icon" />
+    <title>Title</title>
+</head>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#login').click(function () {
+            var postdata = {"username": $("#username").val(), "password": $("#password").val()}
+            $.ajax({
+                type: "POST",
+                url: "/login",
+                datatype: 'json',
+                contentType: "application/json",
+                data: JSON.stringify(postdata),
+                success: function(data, textStatus, request){
+                    var repHeaderToken = request.getResponseHeader('Authorization');
+                    console.log(repHeaderToken);
+                    localStorage.token = repHeaderToken;
+                    $("#localStorage").innerText = repHeaderToken;
+                    location.href = "app.html"
+                },
+                error: function (request, textStatus, errorThrown) {
+                    alert("Login Failed");
+                }
+            });
+        });
+
+        $('#logout').click(function () {
+            localStorage.clear();
+        });
+    });
+</script>
+<body>
+<div class="container">
+    <div class="form-group">
+        <h1><label for="username"> - Login - </label></h1>
+    </div>
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" class="form-control" value="admin">
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" class="form-control" value="password">
+    </div>
+    <div class="form-group">
+        <button class="btn btn-primary" id="login">Login</button>
+        <button class="btn btn-primary" id="logout">Logout</button>
+    </div>
+
+    <div class="form-group">
+        <label id="localStorage">localStorage</label>
+    </div>
+</div>
+</body>
+</html>
